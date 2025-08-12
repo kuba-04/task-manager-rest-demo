@@ -13,11 +13,11 @@ class TaskTest {
     @Test
     void should_create_new_task() {
         // given
-        final var id = new TaskId(UUID.randomUUID());
+        final var id = TaskId.generate();
         final var title = "task_1";
         final var description = "Finish reading the book";
         final var deadline = LocalDateTime.of(2025, 9, 1, 12, 0 ,0);
-        final var userId = new UserId(UUID.randomUUID());
+        final var userId = UserId.generate();
 
         // when
         final var task = Task.create(id, title, description, deadline, List.of(userId));
@@ -34,7 +34,7 @@ class TaskTest {
     @Test
     void should_create_new_task_with_minimum_values_required() {
         // given
-        final var id = new TaskId(UUID.randomUUID());
+        final var id = TaskId.generate();
         final var title = "task_1";
 
         // then
@@ -58,16 +58,16 @@ class TaskTest {
 
         // then
         assertThrows(IllegalArgumentException.class,
-                () -> Task.create(new TaskId(UUID.randomUUID()), title, "desc", null, List.of()));
+                () -> Task.create(TaskId.generate(), title, "desc", null, List.of()));
     }
 
     @Test
     void should_assign_more_users_to_one_task() {
         // given
-        final var user1 = new UserId(UUID.randomUUID());
-        final var user2 = new UserId(UUID.randomUUID());
+        final var user1 = UserId.generate();
+        final var user2 = UserId.generate();
 
-        final var task = Task.create(new TaskId(UUID.randomUUID()), "task_1", null, null, List.of(user1));
+        final var task = Task.create(TaskId.generate(), "task_1", null, null, List.of(user1));
 
         // when
         task.assignUser(user2);
@@ -79,9 +79,9 @@ class TaskTest {
     @Test
     void should_assign_users_only_once_to_the_same_task() {
         // given
-        final var user = new UserId(UUID.randomUUID());
+        final var user = UserId.generate();
 
-        final var task = Task.create(new TaskId(UUID.randomUUID()), "task_1", null, null, List.of(user));
+        final var task = Task.create(TaskId.generate(), "task_1", null, null, List.of(user));
 
         // when
         task.assignUser(user);
@@ -93,7 +93,7 @@ class TaskTest {
     @Test
     void should_change_status() {
         // given
-        final var task = Task.create(new TaskId(UUID.randomUUID()), "task_1", null, null, List.of());
+        final var task = Task.create(TaskId.generate(), "task_1", null, null, List.of());
         assertEquals(TaskStatus.New, task.getTaskStatus());
 
         // when

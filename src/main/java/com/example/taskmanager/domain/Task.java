@@ -1,17 +1,32 @@
 package com.example.taskmanager.domain;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
+@Entity
+@Table(name = "tasks")
 public class Task {
-    private final TaskId id;
-    private final String title;
-    private final String description;
-    private final LocalDateTime deadline;
+    @EmbeddedId
+    private TaskId id;
+    private String title;
+    private String description;
+    private LocalDateTime deadline;
+    @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
-    private final List<UserId> assignedUsers;
+    @ElementCollection
+    @CollectionTable(
+            name = "task_assigned_users",
+            joinColumns = @JoinColumn(name = "task_id")
+    )
+    private List<String> assignedUsers; // flatten this to string due to hibernate issues with new spring
+
+    // required by hibernate
+    private Task() {}
 
     private Task(TaskId id, String title, String description, LocalDateTime deadline, TaskStatus taskStatus, List<UserId> assignedUsers) {
         this.id = id;
@@ -19,7 +34,7 @@ public class Task {
         this.description = description;
         this.deadline = deadline;
         this.taskStatus = taskStatus;
-        this.assignedUsers = new ArrayList<>(assignedUsers);
+        this.assignedUsers = new ArrayList<>(assignedUsers.stream().map(uid -> uid.id().toString()).toList());
     }
 
     public static Task create(TaskId id, String title, String description, LocalDateTime deadline, List<UserId> assignedUsers) {
@@ -33,15 +48,27 @@ public class Task {
     }
 
     public void assignUser(UserId userId) {
-        if (assignedUsers.contains(userId)) {
+        if (assignedUsers.contains(userId.id().toString())) {
             // a business decision to ignore this for now instead of throwing an exception
             return;
         }
-        assignedUsers.add(userId);
+        assignedUsers.add(userId.id().toString());
     }
 
     public void changeStatus(TaskStatus newStatus) {
         taskStatus = newStatus;
+    }
+
+    public void changeTitle(String newTitle) {
+        title = newTitle;
+    }
+
+    public void changeDescription(String newDescription) {
+        description = newDescription;
+    }
+
+    public void changeDeadline(LocalDateTime newDeadline) {
+        deadline = newDeadline;
     }
 
     public TaskId getId() {
@@ -65,7 +92,7 @@ public class Task {
     }
 
     public List<UserId> getAssignedUsers() {
-        return new ArrayList<>(assignedUsers);
+        return new ArrayList<>(assignedUsers.stream().map(uid -> new UserId(UUID.fromString(uid))).toList());
     }
 
     @Override

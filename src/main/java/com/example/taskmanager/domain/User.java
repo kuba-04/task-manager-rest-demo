@@ -1,16 +1,25 @@
 package com.example.taskmanager.domain;
 
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
-import java.util.UUID;
 
 // note: at this point this class could be a record as no modifications are required.
 // But given the project domain, it can be anticipated that at least email should be updatable.
 // Additionally, we want to keep consistency in object creation pattern
+@Entity
+@Table(name = "users")
 public class User {
-    private final UserId id;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
+    @EmbeddedId
+    private UserId id;
+    private String firstName;
+    private String lastName;
+    private String email;
+
+    // required by hibernate
+    private User() {}
 
     private User(UserId id, String firstName, String lastName, String email) {
         this.id = id;
