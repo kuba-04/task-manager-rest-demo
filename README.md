@@ -179,3 +179,7 @@ curl -X GET "http://localhost:8080/api/tasks?page=0&size=10&sort=title,asc"
   - [ ] search with filter and sort
   - [ ] adding
   - [ ] deleting
+
+### other todos:
+- [ ] ci
+- [ ] todos with missing pieces
