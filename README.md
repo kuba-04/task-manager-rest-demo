@@ -1,6 +1,8 @@
-# Task Manager Demo
+![CI](https://github.com/kuba-04/task-manager-rest-demo/workflows/CI/badge.svg)
 
-A Spring Boot application for managing tasks and users with RESTful API endpoints.
+# Task Manager REST Demo
+
+A demo project in Spring Boot for managing tasks and users with RESTful API endpoints.
 
 ## Getting Started
 
@@ -197,7 +199,7 @@ curl -X GET "http://localhost:8080/api/tasks?page=0&size=10&sort=title,asc"
 - `Active`
 - `Completed`
 
-### Required functionality for demo project:
+## Required functionality this demo:
 
 - [x] domain models: User, Task
 - [x] task can be assigned to more than 1 user
