@@ -31,9 +31,21 @@ public class TaskController {
         this.service = service;
     }
 
+    @GetMapping("/{taskId}")
+    public TaskResponse findById(@PathVariable String taskId) {
+        UUID uuid;
+        try {
+             uuid = UUID.fromString(taskId);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return service.findById(new TaskId(uuid))
+                .map(toResponse())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping
-    public Page<TaskResponse> searchTasks(
-            @RequestParam(required = false) TaskId id, // todo add method for id search as this is pointless
+    public Page<TaskResponse> findTasks(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) TaskStatus taskStatus,
@@ -43,7 +55,7 @@ public class TaskController {
             Pageable pageable) {
         
         final var params = new TaskSearchParams(
-            id, title, description, taskStatus, 
+            title, description, taskStatus,
             deadlineFrom, deadlineTo, assignedUserId
         );
 

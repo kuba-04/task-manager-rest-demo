@@ -4,7 +4,6 @@ import com.example.taskmanager.domain.Task;
 import com.example.taskmanager.domain.TaskId;
 import com.example.taskmanager.domain.TaskStatus;
 import com.example.taskmanager.domain.UserId;
-import com.example.taskmanager.service.TaskEditDto;
 import com.example.taskmanager.service.TaskSearchParams;
 import com.example.taskmanager.service.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -154,6 +153,34 @@ class TaskControllerTest {
                         task.getTaskStatus(),
                         task.getAssignedUsers().stream().map(u -> u.id().toString()).toList()))));
         mockMvc.perform(get("/api/tasks")
+                        .param("title", "Test task")
+                        .param("taskStatus", TaskStatus.Active.name())
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(jsonContent));
+    }
+
+    @Test
+    void should_find_task_by_id() throws Exception {
+        // Given
+        final var taskId = TaskId.generate();
+        final var task = Task.create(taskId, "Test task", "Description",
+                LocalDateTime.now(), List.of());
+
+        when(taskService.findById(any(TaskId.class)))
+                .thenReturn(Optional.of(task));
+
+        // When & Then
+        final var jsonContent = objectMapper.writeValueAsString(
+                new TaskResponse(
+                        task.getId().id().toString(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getDeadline(),
+                        task.getTaskStatus(),
+                        task.getAssignedUsers().stream().map(u -> u.id().toString()).toList()));
+        mockMvc.perform(get("/api/tasks/" + taskId.id().toString())
                         .param("title", "Test task")
                         .param("taskStatus", TaskStatus.Active.name())
                         .param("page", "0")

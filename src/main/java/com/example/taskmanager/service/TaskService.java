@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TaskService {
 
@@ -59,9 +60,12 @@ public class TaskService {
         taskRepository.deleteById(taskId);
     }
 
+    public Optional<Task> findById(TaskId taskId) {
+        return taskRepository.findById(taskId);
+    }
+
     public Page<Task> findTasks(TaskSearchParams searchParams, Pageable pageable) {
         return taskRepository.findBySearchParams(
-                searchParams.id(),
                 searchParams.title(),
                 searchParams.description(),
                 searchParams.taskStatus(),

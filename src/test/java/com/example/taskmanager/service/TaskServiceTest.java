@@ -80,7 +80,6 @@ class TaskServiceTest {
     void should_find_task_by_params() {
         // Given
         final var searchParams = new TaskSearchParams(
-                TaskId.generate(),
                 "Fix bug",
                 "Fix login issue",
                 TaskStatus.New,
@@ -90,7 +89,7 @@ class TaskServiceTest {
         );
         final var pageable = PageRequest.of(0, 10);
 
-        when(taskRepository.findBySearchParams(any(), any(), any(), any(), any(), any(), any(), any()))
+        when(taskRepository.findBySearchParams(any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
 
         // When
@@ -99,7 +98,6 @@ class TaskServiceTest {
         // Then
         final var argumentsCaptor = ArgumentCaptor.forClass(Object.class);
         verify(taskRepository).findBySearchParams(
-                (TaskId) argumentsCaptor.capture(),
                 (String) argumentsCaptor.capture(),
                 (String) argumentsCaptor.capture(),
                 (TaskStatus) argumentsCaptor.capture(),
@@ -110,13 +108,12 @@ class TaskServiceTest {
         );
 
         final var capturedArgs = argumentsCaptor.getAllValues();
-        assertEquals(searchParams.id(), capturedArgs.get(0));
-        assertEquals(searchParams.title(), capturedArgs.get(1));
-        assertEquals(searchParams.description(), capturedArgs.get(2));
-        assertEquals(searchParams.taskStatus(), capturedArgs.get(3));
-        assertEquals(searchParams.deadlineFrom(), capturedArgs.get(4));
-        assertEquals(searchParams.deadlineTo(), capturedArgs.get(5));
-        assertEquals(searchParams.assignedUserId(), capturedArgs.get(6));
+        assertEquals(searchParams.title(), capturedArgs.get(0));
+        assertEquals(searchParams.description(), capturedArgs.get(1));
+        assertEquals(searchParams.taskStatus(), capturedArgs.get(2));
+        assertEquals(searchParams.deadlineFrom(), capturedArgs.get(3));
+        assertEquals(searchParams.deadlineTo(), capturedArgs.get(4));
+        assertEquals(searchParams.assignedUserId(), capturedArgs.get(5));
     }
 
     @Test

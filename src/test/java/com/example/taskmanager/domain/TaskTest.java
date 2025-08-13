@@ -109,4 +109,23 @@ class TaskTest {
         assertEquals(TaskStatus.Completed, task.getTaskStatus());
     }
 
+    @Test
+    void should_change_title_description_deadline() {
+        // given
+        final var task = Task.create(TaskId.generate(), "task_1", null, null, List.of());
+        final var newTitle = "Task #1";
+        final var newDescription = "More about this task..";
+        final var newDeadline = LocalDateTime.of(2025, 10, 10, 10, 10, 10);
+
+        // when
+        task.changeTitle(newTitle);
+        task.changeDescription(newDescription);
+        task.changeDeadline(newDeadline);
+
+        // then
+        assertEquals(newTitle, task.getTitle());
+        assertEquals(newDescription, task.getDescription());
+        assertEquals(newDeadline, task.getDeadline());
+    }
+
 }
