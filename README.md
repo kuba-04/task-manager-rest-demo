@@ -1,6 +1,38 @@
 # Task Manager Demo
 
-## Testing Guide
+A Spring Boot application for managing tasks and users with RESTful API endpoints.
+
+## Getting Started
+
+### Prerequisites
+
+- Java 17 or higher
+
+### Building the Application
+
+To build the application, run:
+
+```bash
+./gradlew build
+```
+
+### Running the Application
+
+To run the application locally:
+
+```bash
+./gradlew bootRun
+```
+
+The application will start on `http://localhost:8080`
+
+### API Documentation
+
+Once the application is running, you can access the Swagger UI at:
+
+- `http://localhost:8080/swagger-ui.html`
+
+## Easy testing path
 
 ### Testing Flow Overview
 
@@ -75,6 +107,7 @@ Search for all tasks to verify the task was created.
 ```bash
 curl GET "http://localhost:8080/api/tasks" | jq
 ```
+
 Or:
 
 ```bash
@@ -146,7 +179,6 @@ curl -i -X DELETE http://localhost:8080/api/users/USER_ID_HERE
 
 ### 13. Verify User Deletion
 
-
 ```bash
 curl -X GET "http://localhost:8080/api/users"
 ```
@@ -166,20 +198,23 @@ curl -X GET "http://localhost:8080/api/tasks?page=0&size=10&sort=title,asc"
 - `Completed`
 
 ### Required functionality for demo project:
+
 - [x] domain models: User, Task
 - [x] task can be assigned to more than 1 user
-- [ ] task API: 
-  - [ ] search with filter and sort
-  - [ ] adding
-  - [ ] editing
-  - [ ] deleting
-  - [ ] status change
-  - [ ] user assigning
-- [ ] user API:
-  - [ ] search with filter and sort
-  - [ ] adding
-  - [ ] deleting
+- [x] task API:
+  - [x] search with filter and sort
+  - [x] adding
+  - [x] editing
+  - [x] deleting
+  - [x] status change
+  - [x] user assigning
+- [x] user API:
+  - [x] search with filter and sort
+  - [x] adding
+  - [x] deleting
 
 ### other todos:
+
+- [x] swagger ui
 - [ ] ci
 - [ ] todos with missing pieces
