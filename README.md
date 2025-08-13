@@ -1,5 +1,3 @@
-![CI](https://github.com/kuba-04/task-manager-rest-demo/workflows/test_and_build/badge.svg)
-
 # Task Manager REST Demo
 
 A demo project in Spring Boot for managing tasks and users with RESTful API endpoints.
