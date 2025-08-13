@@ -24,6 +24,9 @@ public class Task {
     private LocalDateTime deadline;
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
+    /**
+     * See: README.md#architecture-decision
+     */
     @ElementCollection
     @CollectionTable(
             name = "task_assigned_users",
@@ -54,6 +57,9 @@ public class Task {
     }
 
     public void assignUser(UserId userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
         if (assignedUsers.contains(userId.id().toString())) {
             // a business decision to ignore this for now instead of throwing an exception
             return;

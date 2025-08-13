@@ -197,6 +197,13 @@ curl -X GET "http://localhost:8080/api/tasks?page=0&size=10&sort=title,asc"
 - `Active`
 - `Completed`
 
+## Architecture Decision {#architecture-decision}
+An explanation is needed about architectural decisions, especially in terms of entities design.
+There is a many to many relationship between Users and Tasks so intuitively we would take a more common approach
+of using @ManyToMany annotation. But a cleaner approach was taken to separate our domain from adapters 
+so even a choice of database should be delayed. It was decided to keep only a reference of userIds in Task entity 
+which gives more flexibility at this stage of the project.
+
 ### Required functionality for demo project:
 
 - [x] domain models: User, Task
