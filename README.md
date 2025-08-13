@@ -1,4 +1,4 @@
-![CI](https://github.com/kuba-04/task-manager-rest-demo/workflows/CI/badge.svg)
+![CI](https://github.com/kuba-04/task-manager-rest-demo/workflows/test_and_build/badge.svg)
 
 # Task Manager REST Demo
 
@@ -199,7 +199,7 @@ curl -X GET "http://localhost:8080/api/tasks?page=0&size=10&sort=title,asc"
 - `Active`
 - `Completed`
 
-## Required functionality this demo:
+### Required functionality for demo project:
 
 - [x] domain models: User, Task
 - [x] task can be assigned to more than 1 user
