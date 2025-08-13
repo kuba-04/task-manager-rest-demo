@@ -16,7 +16,7 @@ public class User {
     private UserId id;
     private String firstName;
     private String lastName;
-    private String email;
+    private String email; // as mentioned in Task class, this should be Email VO with proper validations
 
     // required by hibernate
     private User() {}

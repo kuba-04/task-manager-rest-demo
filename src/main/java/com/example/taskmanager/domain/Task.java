@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-// For production code, domain fields should be domain value objects like Title etc. with their own validations,
+// For production code, domain fields should be domain value objects like Title, Deadline etc. with their own validations,
 // but I wanted to keep it simple for this demo.
 // Most likely we would need separate data layer with simple fields as an entity to be managed by hibernate,
 // and business logic would be kept in rich domain model
