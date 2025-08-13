@@ -3,6 +3,7 @@ package com.example.taskmanager.domain;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 
 import java.util.Objects;
 
@@ -16,7 +17,8 @@ public class User {
     private UserId id;
     private String firstName;
     private String lastName;
-    private String email; // as mentioned in Task class, this should be Email VO with proper validations
+    @Email
+    private String email;
 
     // required by hibernate
     private User() {}

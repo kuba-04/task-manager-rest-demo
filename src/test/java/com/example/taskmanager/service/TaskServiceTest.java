@@ -38,7 +38,7 @@ class TaskServiceTest {
     private UserRepository userRepository;
 
     @Test
-    void should_save_task() throws UserNotFoundException {
+    void should_save_task() throws UserNotFoundException, DomainObjectValidationException {
         // Given
         final var user = UserId.generate();
         final var task = Task.create(
@@ -180,7 +180,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void should_edit_task() throws TaskNotFoundException, UserNotFoundException {
+    void should_edit_task() throws TaskNotFoundException, UserNotFoundException, DomainObjectValidationException {
         // Given
         final var taskId = TaskId.generate();
         final var initialTask = Task.create(taskId, "Task 1", null, null, List.of());

@@ -16,8 +16,12 @@ public class UserService {
         this.repository = repository;
     }
 
-    public void addUser(User user) {
-        repository.save(user);
+    public void addUser(User user) throws DomainObjectValidationException {
+        try {
+            repository.save(user);
+        } catch (Exception e) {
+            throw new DomainObjectValidationException(e.getMessage());
+        }
     }
 
     public void deleteUser(UserId userId) {

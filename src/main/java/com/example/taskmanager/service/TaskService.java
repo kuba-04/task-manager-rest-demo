@@ -8,6 +8,7 @@ import com.example.taskmanager.domain.TaskStatus;
 import com.example.taskmanager.domain.UserId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,17 +23,24 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
-    public void addTask(Task task) throws UserNotFoundException {
+    public void addTask(Task task) throws UserNotFoundException, DomainObjectValidationException {
         validateUsersExist(task.getAssignedUsers());
-        taskRepository.save(task);
+        try {
+            taskRepository.save(task);
+        } catch (Exception e) {
+            // todo: add more domain validations, then distinguish validation failure exc from other db issues
+            throw new DomainObjectValidationException(e.getMessage());
+        }
     }
 
+    @Transactional
     public void changeStatus(TaskId taskId, TaskStatus status) throws TaskNotFoundException {
         final var task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
         task.changeStatus(status);
         taskRepository.save(task);
     }
 
+    @Transactional
     public void assignUsers(TaskId taskId, List<UserId> users) throws TaskNotFoundException, UserNotFoundException {
         final var task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
         validateUsersExist(users);
@@ -40,7 +48,8 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    public void editTask(TaskId taskId, TaskEditDto taskEditDto) throws TaskNotFoundException, UserNotFoundException {
+    @Transactional
+    public void editTask(TaskId taskId, TaskEditDto taskEditDto) throws TaskNotFoundException, UserNotFoundException, DomainObjectValidationException {
         final var task = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
         if (taskEditDto.title().isPresent()) {
             task.changeTitle(taskEditDto.title().get());
@@ -53,7 +62,11 @@ public class TaskService {
         }
         validateUsersExist(taskEditDto.users());
 
-        taskRepository.save(task);
+        try {
+            taskRepository.save(task);
+        } catch (Exception e) {
+            throw new DomainObjectValidationException(e.getMessage());
+        }
     }
 
     public void deleteTask(TaskId taskId) {

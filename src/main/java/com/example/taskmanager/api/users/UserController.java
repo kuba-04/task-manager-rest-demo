@@ -2,6 +2,7 @@ package com.example.taskmanager.api.users;
 
 import com.example.taskmanager.domain.User;
 import com.example.taskmanager.domain.UserId;
+import com.example.taskmanager.service.DomainObjectValidationException;
 import com.example.taskmanager.service.UserSearchParams;
 import com.example.taskmanager.service.UserService;
 import org.springframework.data.domain.Page;
@@ -63,7 +64,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> addUser(@RequestBody AddUserRequest request) {
         final var userId = UserId.generate();
-        service.addUser(User.create(userId, request.firstName(), request.lastName(), request.email()));
+        try {
+            service.addUser(User.create(userId, request.firstName(), request.lastName(), request.email()));
+        } catch (DomainObjectValidationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
         return ResponseEntity.created(URI.create("/api/users/" + userId.id().toString())).build();
     }
 

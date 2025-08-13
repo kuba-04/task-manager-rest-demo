@@ -28,7 +28,7 @@ class UserServiceTest {
     private UserRepository repository;
 
     @Test
-    void should_save_user() {
+    void should_save_user() throws DomainObjectValidationException {
         // Given
         final var user = User.create(UserId.generate(), "Alice", "Smith", "alice@acme.com");
         final var argumentCaptor = ArgumentCaptor.forClass(User.class);

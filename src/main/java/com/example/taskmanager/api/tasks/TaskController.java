@@ -4,10 +4,7 @@ import com.example.taskmanager.domain.Task;
 import com.example.taskmanager.domain.TaskId;
 import com.example.taskmanager.domain.TaskStatus;
 import com.example.taskmanager.domain.UserId;
-import com.example.taskmanager.service.TaskNotFoundException;
-import com.example.taskmanager.service.TaskSearchParams;
-import com.example.taskmanager.service.TaskService;
-import com.example.taskmanager.service.UserNotFoundException;
+import com.example.taskmanager.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -83,6 +80,8 @@ public class TaskController {
             service.addTask(task);
         } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DomainObjectValidationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
         return ResponseEntity.created(URI.create("/api/tasks/" + taskId.id().toString())).build();
@@ -129,7 +128,7 @@ public class TaskController {
             service.editTask(new TaskId(id), request.toDto());
         } catch (TaskNotFoundException | UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | DomainObjectValidationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }

@@ -1,6 +1,7 @@
 package com.example.taskmanager.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class Task {
     private TaskId id;
     private String title;
     private String description;
+    @Future
     private LocalDateTime deadline;
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
