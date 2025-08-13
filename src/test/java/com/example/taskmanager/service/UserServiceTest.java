@@ -62,11 +62,10 @@ class UserServiceTest {
     @Test
     void should_find_user_by_params() {
         // Given
-        final var searchParams = new UserSearchParams(
-                UserId.generate(), "Alice", "Smith", "alice@acme.com");
+        final var searchParams = new UserSearchParams("Alice", "Smith", "alice@acme.com");
         final var pageable = PageRequest.of(0, 10);
 
-        when(repository.findBySearchParams(any(), any(), any(), any(), any()))
+        when(repository.findBySearchParams(any(), any(), any(), any()))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
 
         // When
@@ -75,7 +74,6 @@ class UserServiceTest {
         // Then
         final var argumentsCaptor = ArgumentCaptor.forClass(Object.class);
         verify(repository).findBySearchParams(
-                (UserId) argumentsCaptor.capture(),
                 (String) argumentsCaptor.capture(),
                 (String) argumentsCaptor.capture(),
                 (String) argumentsCaptor.capture(),
@@ -83,10 +81,9 @@ class UserServiceTest {
         );
 
         final var capturedArgs = argumentsCaptor.getAllValues();
-        assertEquals(searchParams.id(), capturedArgs.get(0));
-        assertEquals(searchParams.firstName(), capturedArgs.get(1));
-        assertEquals(searchParams.lastName(), capturedArgs.get(2));
-        assertEquals(searchParams.email(), capturedArgs.get(3));
+        assertEquals(searchParams.firstName(), capturedArgs.get(0));
+        assertEquals(searchParams.lastName(), capturedArgs.get(1));
+        assertEquals(searchParams.email(), capturedArgs.get(2));
     }
 
 }

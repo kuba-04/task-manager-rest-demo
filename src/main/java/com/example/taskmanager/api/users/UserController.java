@@ -25,16 +25,28 @@ public class UserController {
         this.service = service;
     }
 
+    @GetMapping("/{userId}")
+    public UserResponse findUser(@PathVariable String userId) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(userId);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return service.findUserById(new UserId(uuid))
+                .map(toResponse())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping
-    public Page<UserResponse> searchUsers(
-            @RequestParam(required = false) UserId id,
+    public Page<UserResponse> findUsers(
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String email,
             Pageable pageable) {
-        
+
         final var params = new UserSearchParams(
-            id, firstName, lastName, email
+            firstName, lastName, email
         );
 
         return service.findUsers(params, pageable).map(toResponse());

@@ -217,4 +217,4 @@ curl -X GET "http://localhost:8080/api/tasks?page=0&size=10&sort=title,asc"
 
 - [x] swagger ui
 - [x] ci
-- [ ] todos with missing pieces
+- [x] todos with missing pieces

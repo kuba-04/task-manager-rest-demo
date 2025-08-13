@@ -2,7 +2,6 @@ package com.example.taskmanager.api.users;
 
 import com.example.taskmanager.domain.User;
 import com.example.taskmanager.domain.UserId;
-import com.example.taskmanager.service.TaskSearchParams;
 import com.example.taskmanager.service.UserSearchParams;
 import com.example.taskmanager.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -98,4 +98,21 @@ class UserControllerTest {
                 .param("size", "10"))
                 .andExpect(content().json(jsonContent));
     }
+
+    @Test
+    void should_find_user_by_id() throws Exception {
+        // Given
+        final var userId = UserId.generate();
+        final var user = User.create(userId, "Alice", "Smith", "as@acme.com");
+
+        when(userService.findUserById(any(UserId.class))).thenReturn(Optional.of(user));
+
+        // When & Then
+        final var jsonContent = objectMapper.writeValueAsString(
+                new UserResponse(user.getId().id().toString(), user.getFirstName(), user.getLastName(), user.getEmail()));
+        mockMvc.perform(get("/api/users/" + userId.id().toString()))
+                .andExpect(content().json(jsonContent));
+    }
+
+    // above are happy path tests, but I am aware of multiple negative cases that could be covered here
 }
